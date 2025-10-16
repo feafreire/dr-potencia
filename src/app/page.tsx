@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from 'react'
-import { ChevronRight, Shield, Clock, Users, Star, Menu, X, Phone, Mail } from 'lucide-react'
+import { ChevronRight, Shield, Clock, Users, Star, Menu, X, Phone, Mail, BookOpen } from 'lucide-react'
 import MedicalQuiz from '@/components/MedicalQuiz'
 import PatientDashboard from '@/components/PatientDashboard'
 
@@ -101,28 +101,21 @@ export default function DrPotenciaHome() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6">
-                Recupere sua
-                <span className="text-[#D72638]"> confiança</span> e
-                <span className="text-[#D72638]"> vitalidade</span>
+                Recupere sua <span style={{color: '#D72638'}}>confiança</span> na <span style={{color: '#D72638'}}>hora H</span>
               </h1>
               <p className="text-xl sm:text-2xl leading-relaxed mb-8 text-gray-200">
-                Tratamento médico discreto e eficaz para disfunção erétil, ejaculação precoce e baixa testosterona. 
-                Consulta online com médicos especialistas.
+                Tratamento médico eficaz para trazer de volta sua confiança, controle e potência. 
+Faça sua Avaliação Online Gratuita com o Dr. Potência, especialista no assunto há 37 anos
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <button 
                   onClick={() => setCurrentView('quiz')}
                   className="bg-[#00796B] text-white px-8 py-4 rounded-2xl hover:bg-[#00695C] transition-all duration-300 text-xl font-medium shadow-lg hover:shadow-xl focus:outline-none focus:ring-3 focus:ring-[#00796B]"
                 >
-                  Fazer Avaliação Gratuita
+                  Iniciar Minha Avaliação Gratuita
                   <ChevronRight className="inline ml-2" size={20} />
                 </button>
-                <button 
-                  onClick={() => setCurrentView('quiz')}
-                  className="border-2 border-white text-white px-8 py-4 rounded-2xl hover:bg-white hover:text-[#0A2540] transition-all duration-300 text-xl font-medium focus:outline-none focus:ring-3 focus:ring-white"
-                >
-                  Fazer Quiz Rápido
-                </button>
+
               </div>
               <div className="mt-8 flex items-center gap-6 text-sm text-gray-300">
                 <div className="flex items-center gap-2">
@@ -138,24 +131,24 @@ export default function DrPotenciaHome() {
             <div className="hidden lg:block">
               <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 shadow-2xl">
                 <div className="text-center">
-                  <div className="text-4xl font-bold text-[#00796B] mb-2">98%</div>
-                  <div className="text-lg mb-6">Taxa de Sucesso</div>
+                  <div className="text-4xl font-bold text-[#00796B] mb-2">4,9/5</div>
+                  <div className="text-lg mb-6">de satisfação</div>
                   <div className="space-y-4 text-left">
                     <div className="flex items-center gap-3">
                       <div className="w-2 h-2 bg-[#00796B] rounded-full"></div>
-                      <span>Médicos especialistas certificados</span>
+                      <span>Conteúdo revisado e testado por especialistas</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="w-2 h-2 bg-[#00796B] rounded-full"></div>
-                      <span>Medicamentos originais e seguros</span>
+                      <span>100% confidencial</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="w-2 h-2 bg-[#00796B] rounded-full"></div>
-                      <span>Entrega discreta em casa</span>
+                      <span>Mensagens discretas no WhatsApp</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="w-2 h-2 bg-[#00796B] rounded-full"></div>
-                      <span>Acompanhamento médico contínuo</span>
+                      <span>Passo a passo simples para começar</span>
                     </div>
                   </div>
                 </div>
@@ -170,105 +163,112 @@ export default function DrPotenciaHome() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#0A2540] mb-6">
-              Tratamentos Especializados
+              Você Não Está Sozinho. Isso Tem Solução!
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Soluções médicas comprovadas para os principais problemas de saúde sexual masculina
+              Entenda o que causa os principais problemas da saúde sexual masculina e como podemos solucionar isso com você!
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-8 items-stretch">
             {/* Disfunção Erétil */}
-            <div className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
+            <div className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col">
               <div className="w-16 h-16 bg-[#0A2540] rounded-2xl flex items-center justify-center mb-6">
                 <div className="text-white text-2xl font-bold">DE</div>
               </div>
               <h3 className="text-2xl font-bold text-[#0A2540] mb-4">Disfunção Erétil</h3>
-              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                Tratamento eficaz com medicamentos aprovados pela ANVISA. Recupere sua capacidade de ter e manter ereções firmes.
+              <p className="text-lg text-gray-600 mb-6 leading-relaxed flex-grow">
+                Dificuldade em manter uma ereção firme pode estar ligada à circulação, hormônios ou ansiedade.
+                O tratamento médico avalia a causa e ajusta a dosagem ideal para restaurar a confiança e o desempenho.
               </p>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-center gap-3">
                   <div className="w-2 h-2 bg-[#00796B] rounded-full"></div>
-                  <span className="text-gray-700">Sildenafila, Tadalafila e outros</span>
+                  <span className="text-gray-700">⚕️ Acompanhamento médico individual</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <div className="w-2 h-2 bg-[#00796B] rounded-full"></div>
-                  <span className="text-gray-700">Dosagem personalizada</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <div className="w-2 h-2 bg-[#00796B] rounded-full"></div>
-                  <span className="text-gray-700">Acompanhamento médico</span>
+                  <span className="text-gray-700">🕒 Resultados visíveis em poucos dias</span>
                 </li>
               </ul>
               <button 
                 onClick={() => setCurrentView('quiz')}
-                className="w-full bg-[#00796B] text-white py-4 rounded-2xl hover:bg-[#00695C] transition-colors text-lg font-medium focus:outline-none focus:ring-3 focus:ring-[#00796B]"
+                className="w-full bg-[#00796B] text-white py-4 rounded-2xl hover:bg-[#00695C] transition-colors text-lg font-medium focus:outline-none focus:ring-3 focus:ring-[#00796B] mt-auto"
               >
-                Consultar Especialista
+                Descobrir o Melhor Tratamento pra Mim
               </button>
             </div>
 
             {/* Ejaculação Precoce */}
-            <div className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
+            <div className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col">
               <div className="w-16 h-16 bg-[#D72638] rounded-2xl flex items-center justify-center mb-6">
                 <div className="text-white text-2xl font-bold">EP</div>
               </div>
               <h3 className="text-2xl font-bold text-[#0A2540] mb-4">Ejaculação Precoce</h3>
-              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                Controle total sobre sua performance. Tratamentos que aumentam significativamente o tempo de duração.
+              <p className="text-lg text-gray-600 mb-6 leading-relaxed flex-grow">
+                O controle do tempo está diretamente ligado a fatores psicológicos e neurológicos.
+                Técnicas comportamentais e suplementações específicas ajudam a prolongar o prazer com segurança.
               </p>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-center gap-3">
                   <div className="w-2 h-2 bg-[#00796B] rounded-full"></div>
-                  <span className="text-gray-700">Dapoxetina e alternativas</span>
+                  <span className="text-gray-700">💬 Apoio médico e orientações práticas</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <div className="w-2 h-2 bg-[#00796B] rounded-full"></div>
-                  <span className="text-gray-700">Técnicas comportamentais</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <div className="w-2 h-2 bg-[#00796B] rounded-full"></div>
-                  <span className="text-gray-700">Resultados em 2-4 semanas</span>
+                  <span className="text-gray-700">⏱️ Melhora significativa em poucas semanas</span>
                 </li>
               </ul>
               <button 
                 onClick={() => setCurrentView('quiz')}
-                className="w-full bg-[#00796B] text-white py-4 rounded-2xl hover:bg-[#00695C] transition-colors text-lg font-medium focus:outline-none focus:ring-3 focus:ring-[#00796B]"
+                className="w-full bg-[#00796B] text-white py-4 rounded-2xl hover:bg-[#00695C] transition-colors text-lg font-medium focus:outline-none focus:ring-3 focus:ring-[#00796B] mt-auto"
               >
-                Consultar Especialista
+                Descobrir o Melhor Tratamento pra Mim
               </button>
             </div>
 
             {/* Baixa Testosterona */}
-            <div className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
+            <div className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col">
               <div className="w-16 h-16 bg-[#00796B] rounded-2xl flex items-center justify-center mb-6">
                 <div className="text-white text-2xl font-bold">T</div>
               </div>
               <h3 className="text-2xl font-bold text-[#0A2540] mb-4">Baixa Testosterona</h3>
-              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                Recupere energia, libido e disposição. Reposição hormonal segura e monitorada por especialistas.
+              <p className="text-lg text-gray-600 mb-6 leading-relaxed flex-grow">
+                A testosterona é o hormônio que regula energia, libido e disposição.
+                A queda é natural com a idade, mas pode ser corrigida com reposição segura e acompanhamento.
               </p>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-center gap-3">
                   <div className="w-2 h-2 bg-[#00796B] rounded-full"></div>
-                  <span className="text-gray-700">Exames laboratoriais inclusos</span>
+                  <span className="text-gray-700">🧪 Exames e diagnóstico médico</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <div className="w-2 h-2 bg-[#00796B] rounded-full"></div>
-                  <span className="text-gray-700">Gel ou injeções</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <div className="w-2 h-2 bg-[#00796B] rounded-full"></div>
-                  <span className="text-gray-700">Monitoramento contínuo</span>
+                  <span className="text-gray-700">🔄 Acompanhamento contínuo para equilíbrio ideal</span>
                 </li>
               </ul>
               <button 
                 onClick={() => setCurrentView('quiz')}
-                className="w-full bg-[#00796B] text-white py-4 rounded-2xl hover:bg-[#00695C] transition-colors text-lg font-medium focus:outline-none focus:ring-3 focus:ring-[#00796B]"
+                className="w-full bg-[#00796B] text-white py-4 rounded-2xl hover:bg-[#00695C] transition-colors text-lg font-medium focus:outline-none focus:ring-3 focus:ring-[#00796B] mt-auto"
               >
-                Consultar Especialista
+                Descobrir o Melhor Tratamento pra Mim
               </button>
+            </div>
+          </div>
+
+          {/* Dica do Dr. Potência */}
+          <div className="mt-16 bg-blue-50 rounded-3xl p-8 border border-blue-100">
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0">
+                <BookOpen className="w-8 h-8 text-blue-600" />
+              </div>
+              <div>
+                <h4 className="text-xl font-bold text-blue-900 mb-3">Dica do Dr. Potência:</h4>
+                <p className="text-lg text-blue-800 leading-relaxed">
+                  "Muitos homens acreditam que esses problemas são psicológicos ou sem solução, mas 97% têm causas médicas simples.
+                  O importante é procurar orientação e evitar automedicação."
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -293,7 +293,8 @@ export default function DrPotenciaHome() {
               </div>
               <h3 className="text-2xl font-bold text-[#0A2540] mb-4">Consulta Online</h3>
               <p className="text-lg text-gray-600 leading-relaxed">
-                Responda um questionário médico detalhado no conforto da sua casa. Totalmente confidencial e seguro.
+                Responda um simples questionário médico no conforto da sua casa em apenas 2 minutos.
+                Totalmente sigiloso e seguro — sem necessidade de vídeo ou exposição.
               </p>
             </div>
 
@@ -303,7 +304,7 @@ export default function DrPotenciaHome() {
               </div>
               <h3 className="text-2xl font-bold text-[#0A2540] mb-4">Avaliação Médica</h3>
               <p className="text-lg text-gray-600 leading-relaxed">
-                Médico especialista analisa seu caso e prescreve o tratamento mais adequado para sua situação específica.
+                O Dr. Potência e sua equipe analisam suas respostas e definem o tratamento mais eficaz para o seu caso, de forma personalizada.
               </p>
             </div>
 
@@ -311,9 +312,10 @@ export default function DrPotenciaHome() {
               <div className="w-20 h-20 bg-[#00796B] rounded-full flex items-center justify-center mx-auto mb-6">
                 <span className="text-white text-2xl font-bold">3</span>
               </div>
-              <h3 className="text-2xl font-bold text-[#0A2540] mb-4">Entrega Discreta</h3>
+              <h3 className="text-2xl font-bold text-[#0A2540] mb-4">Análise Exclusiva do Dr. Potência</h3>
               <p className="text-lg text-gray-600 leading-relaxed">
-                Medicamento entregue em embalagem discreta na sua casa. Acompanhamento médico contínuo incluído.
+                Após a análise do seu questionário, o Dr. Potência grava um vídeo explicando seu caso e mostrando o melhor caminho para melhorar seu desempenho.
+                Tudo de forma privada, segura e enviada diretamente no seu WhatsApp.
               </p>
             </div>
           </div>
@@ -323,7 +325,7 @@ export default function DrPotenciaHome() {
               onClick={() => setCurrentView('quiz')}
               className="bg-[#00796B] text-white px-8 py-4 rounded-2xl hover:bg-[#00695C] transition-all duration-300 text-xl font-medium shadow-lg hover:shadow-xl focus:outline-none focus:ring-3 focus:ring-[#00796B]"
             >
-              Começar Agora - É Gratuito
+              Iniciar Avaliação Confidencial
               <ChevronRight className="inline ml-2" size={20} />
             </button>
           </div>
@@ -402,16 +404,13 @@ export default function DrPotenciaHome() {
             Mais de 50.000 homens já recuperaram sua vitalidade com nossos tratamentos. 
             Consulta inicial gratuita e sem compromisso.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex justify-center">
             <button 
               onClick={() => setCurrentView('quiz')}
               className="bg-[#00796B] text-white px-8 py-4 rounded-2xl hover:bg-[#00695C] transition-all duration-300 text-xl font-medium shadow-lg hover:shadow-xl focus:outline-none focus:ring-3 focus:ring-[#00796B]"
             >
               Iniciar Consulta Gratuita
               <ChevronRight className="inline ml-2" size={20} />
-            </button>
-            <button className="border-2 border-white text-white px-8 py-4 rounded-2xl hover:bg-white hover:text-[#0A2540] transition-all duration-300 text-xl font-medium focus:outline-none focus:ring-3 focus:ring-white">
-              Falar com Especialista
             </button>
           </div>
           <div className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-6 text-sm text-gray-300">
