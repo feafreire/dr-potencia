@@ -104,8 +104,7 @@ export default function DrPotenciaHome() {
                 Recupere sua <span style={{color: '#D72638'}}>confiança</span> na <span style={{color: '#D72638'}}>hora H</span>
               </h1>
               <p className="text-xl sm:text-2xl leading-relaxed mb-8 text-gray-200">
-                Tratamento médico eficaz para trazer de volta sua confiança, controle e potência. 
-Faça sua Avaliação Online Gratuita com o Dr. Potência, especialista no assunto há 37 anos
+                Tratamento médico eficaz para trazer de volta sua confiança, controle e potência. Faça sua Avaliação Online Gratuita com o Dr. Potência, especialista no assunto há 37 anos.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <button 
