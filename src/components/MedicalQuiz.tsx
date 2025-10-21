@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { ChevronRight, ChevronLeft, Shield, Clock, CheckCircle } from 'lucide-react'
 
 interface QuizQuestion {
@@ -139,7 +139,7 @@ const quizQuestions: QuizQuestion[] = [
 
 export default function MedicalQuiz() {
   const [currentQuestion, setCurrentQuestion] = useState(0)
-  const [answers, setAnswers] = useState<Record<number, string>>({}))
+  const [answers, setAnswers] = useState<Record<number, string>>({})
   const [showResults, setShowResults] = useState(false)
 
   const handleTextAnswer = (questionId: number, value: string) => {
