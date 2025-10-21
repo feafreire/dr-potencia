@@ -25,8 +25,8 @@ export default function DrPotenciaHome() {
           <div className="flex justify-between items-center h-16 sm:h-20">
             {/* Logo */}
             <div className="flex items-center">
-              <div className="text-2xl sm:text-3xl font-bold text-[#0A2540] cursor-pointer" onClick={() => setCurrentView('home')}>
-                DR. POTÊNCIA
+              <div className="text-2xl sm:text-3xl font-bold text-[#0B2A47] cursor-pointer" onClick={() => setCurrentView('home')}>
+                +POTENTE
               </div>
             </div>
 
@@ -434,7 +434,7 @@ export default function DrPotenciaHome() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <div className="text-2xl font-bold mb-4">DR. POTÊNCIA</div>
+              <div className="text-2xl font-bold mb-4">+POTENTE</div>
               <p className="text-gray-300 leading-relaxed">
                 Especialistas em saúde sexual masculina. Tratamento médico discreto e eficaz.
               </p>
