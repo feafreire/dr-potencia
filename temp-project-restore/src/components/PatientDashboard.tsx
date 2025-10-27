@@ -1,24 +1,11 @@
 "use client"
 
-import { useState, useEffect } from 'react'
-import { User, MessageCircle, Settings, LogOut, Bell, Shield, Clock, CheckCircle, BookOpen, FileText, X, ChevronLeft, ChevronRight, Home } from 'lucide-react'
-import { authService, type AuthState } from '@/lib/auth'
+import { useState } from 'react'
+import { User, MessageCircle, Settings, LogOut, Bell, Shield, Clock, CheckCircle, BookOpen, FileText, X, ChevronLeft, ChevronRight } from 'lucide-react'
 
-interface PatientDashboardProps {
-  onLogout: () => void
-  onBackToHome: () => void
-}
-
-export default function PatientDashboard({ onLogout, onBackToHome }: PatientDashboardProps) {
+export default function PatientDashboard() {
   const [activeTab, setActiveTab] = useState('overview')
   const [selectedSlide, setSelectedSlide] = useState(null)
-  const [authState, setAuthState] = useState<AuthState>(authService.getAuthState())
-  const [logoutMessage, setLogoutMessage] = useState('')
-
-  useEffect(() => {
-    const unsubscribe = authService.subscribe(setAuthState)
-    return unsubscribe
-  }, [])
 
   const educationalSlides = [
     {
@@ -238,7 +225,7 @@ export default function PatientDashboard({ onLogout, onBackToHome }: PatientDash
       id: 5,
       title: "A força masculina começa aqui.",
       subtitle: "Entenda como a testosterona influencia sua energia, disposição e vida sexual.",
-      thumbnail: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=250&fit=crop&auto=format&q=80",
+      thumbnail: "https://k6hrqrxuu8obbfwn.public.blob.vercel-storage.com/temp/12835732-f32b-4b65-adce-df4b239650a0.png",
       content: `
         <div class="space-y-6">
           <h2 class="text-2xl font-bold text-[#0A2540] mb-4">A força masculina começa aqui.</h2>
@@ -302,12 +289,442 @@ export default function PatientDashboard({ onLogout, onBackToHome }: PatientDash
           </div>
         </div>
       `
+    },
+    {
+      id: 6,
+      title: "O coração e a potência andam juntos.",
+      subtitle: "Descubra a conexão entre saúde cardiovascular e função sexual masculina.",
+      thumbnail: "https://k6hrqrxuu8obbfwn.public.blob.vercel-storage.com/temp/cec3739b-8606-46a4-8f04-56ad70303c55.png",
+      content: `
+        <div class="space-y-6">
+          <h2 class="text-2xl font-bold text-[#0A2540] mb-4">O coração e a potência andam juntos.</h2>
+          
+          <div class="bg-red-50 p-6 rounded-2xl">
+            <h3 class="text-lg font-semibold text-[#0A2540] mb-3">A Conexão Vascular:</h3>
+            <p class="text-gray-700 leading-relaxed mb-4">
+              A ereção depende de um fluxo sanguíneo adequado. Os vasos sanguíneos do pênis 
+              são menores que os do coração, então problemas vasculares frequentemente se 
+              manifestam primeiro como disfunção erétil.
+            </p>
+            <ul class="space-y-2 text-gray-700">
+              <li>• <strong>Artérias do pênis:</strong> 1-2mm de diâmetro</li>
+              <li>• <strong>Artérias coronárias:</strong> 3-4mm de diâmetro</li>
+              <li>• <strong>Sinal de alerta:</strong> DE pode indicar problemas cardíacos futuros</li>
+            </ul>
+          </div>
+
+          <div class="bg-yellow-50 p-6 rounded-2xl">
+            <h3 class="text-lg font-semibold text-[#0A2540] mb-3">Fatores de Risco Comuns:</h3>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <h4 class="font-medium text-[#0A2540] mb-2">Para o Coração:</h4>
+                <ul class="text-sm text-gray-700 space-y-1">
+                  <li>• Pressão alta</li>
+                  <li>• Colesterol alto</li>
+                  <li>• Diabetes</li>
+                  <li>• Obesidade</li>
+                  <li>• Tabagismo</li>
+                </ul>
+              </div>
+              <div>
+                <h4 class="font-medium text-[#0A2540] mb-2">Para a Ereção:</h4>
+                <ul class="text-sm text-gray-700 space-y-1">
+                  <li>• Pressão alta</li>
+                  <li>• Colesterol alto</li>
+                  <li>• Diabetes</li>
+                  <li>• Obesidade</li>
+                  <li>• Tabagismo</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-green-50 p-6 rounded-2xl">
+            <h3 class="text-lg font-semibold text-[#0A2540] mb-3">Cuidando de Ambos:</h3>
+            <ul class="space-y-2 text-gray-700">
+              <li>• <strong>Exercícios aeróbicos:</strong> Melhoram circulação geral</li>
+              <li>• <strong>Dieta mediterrânea:</strong> Rica em antioxidantes</li>
+              <li>• <strong>Controle da pressão:</strong> Medicação quando necessária</li>
+              <li>• <strong>Pare de fumar:</strong> Melhora imediata na circulação</li>
+              <li>• <strong>Controle do diabetes:</strong> Glicemia estável</li>
+            </ul>
+          </div>
+
+          <div class="bg-blue-50 p-6 rounded-2xl">
+            <h3 class="text-lg font-semibold text-[#0A2540] mb-3">Benefícios Duplos:</h3>
+            <p class="text-gray-700 leading-relaxed">
+              Ao cuidar da saúde cardiovascular, você automaticamente melhora sua função sexual. 
+              É um investimento que traz benefícios para toda sua saúde e qualidade de vida. 
+              Muitos homens relatam melhora significativa na ereção após adotar hábitos 
+              cardioprotetores.
+            </p>
+          </div>
+        </div>
+      `
+    },
+    {
+      id: 7,
+      title: "A idade muda o corpo. Mas não o desejo.",
+      subtitle: "Como adaptar-se às mudanças naturais do envelhecimento mantendo uma vida sexual ativa.",
+      thumbnail: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=250&fit=crop&auto=format&q=80",
+      content: `
+        <div class="space-y-6">
+          <h2 class="text-2xl font-bold text-[#0A2540] mb-4">A idade muda o corpo. Mas não o desejo.</h2>
+          
+          <div class="bg-blue-50 p-6 rounded-2xl">
+            <h3 class="text-lg font-semibold text-[#0A2540] mb-3">Mudanças Naturais com a Idade:</h3>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <h4 class="font-medium text-[#0A2540] mb-2">40-50 anos:</h4>
+                <ul class="text-sm text-gray-700 space-y-1">
+                  <li>• Ereções podem demorar mais</li>
+                  <li>• Período refratário aumenta</li>
+                  <li>• Testosterona começa a declinar</li>
+                  <li>• Sensibilidade pode diminuir</li>
+                </ul>
+              </div>
+              <div>
+                <h4 class="font-medium text-[#0A2540] mb-2">50+ anos:</h4>
+                <ul class="text-sm text-gray-700 space-y-1">
+                  <li>• Ereções menos firmes</li>
+                  <li>• Ejaculação menos intensa</li>
+                  <li>• Libido pode variar mais</li>
+                  <li>• Necessidade de mais estímulo</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-green-50 p-6 rounded-2xl">
+            <h3 class="text-lg font-semibold text-[#0A2540] mb-3">O Desejo Permanece:</h3>
+            <p class="text-gray-700 leading-relaxed mb-4">
+              Estudos mostram que o interesse sexual pode permanecer forte mesmo com o 
+              envelhecimento. A chave está em adaptar expectativas e explorar novas 
+              formas de intimidade e prazer.
+            </p>
+            <ul class="space-y-2 text-gray-700">
+              <li>• <strong>Qualidade > Frequência:</strong> Foco na conexão e prazer</li>
+              <li>• <strong>Comunicação:</strong> Diálogo aberto com a parceira</li>
+              <li>• <strong>Preliminares:</strong> Mais tempo para aquecimento</li>
+              <li>• <strong>Criatividade:</strong> Explorar diferentes formas de prazer</li>
+            </ul>
+          </div>
+
+          <div class="bg-yellow-50 p-6 rounded-2xl">
+            <h3 class="text-lg font-semibold text-[#0A2540] mb-3">Estratégias de Adaptação:</h3>
+            <ul class="space-y-2 text-gray-700">
+              <li>• <strong>Exercícios regulares:</strong> Mantêm energia e circulação</li>
+              <li>• <strong>Alimentação saudável:</strong> Suporte hormonal natural</li>
+              <li>• <strong>Controle do estresse:</strong> Impacta diretamente na libido</li>
+              <li>• <strong>Sono adequado:</strong> Essencial para produção hormonal</li>
+              <li>• <strong>Acompanhamento médico:</strong> Avaliação hormonal regular</li>
+            </ul>
+          </div>
+
+          <div class="bg-purple-50 p-6 rounded-2xl">
+            <h3 class="text-lg font-semibold text-[#0A2540] mb-3">Tratamentos Disponíveis:</h3>
+            <p class="text-gray-700 leading-relaxed">
+              A medicina moderna oferece diversas opções para homens maduros: medicamentos 
+              para ereção, reposição hormonal quando indicada, terapias psicológicas e 
+              dispositivos auxiliares. O importante é não aceitar passivamente as mudanças 
+              e buscar ajuda profissional.
+            </p>
+          </div>
+        </div>
+      `
+    },
+    {
+      id: 8,
+      title: "A mente pode ser sua maior aliada — ou seu maior inimigo.",
+      subtitle: "Como fatores psicológicos influenciam a performance sexual e estratégias para superá-los.",
+      thumbnail: "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=400&h=250&fit=crop&auto=format&q=80",
+      content: `
+        <div class="space-y-6">
+          <h2 class="text-2xl font-bold text-[#0A2540] mb-4">A mente pode ser sua maior aliada — ou seu maior inimigo.</h2>
+          
+          <div class="bg-red-50 p-6 rounded-2xl">
+            <h3 class="text-lg font-semibold text-[#0A2540] mb-3">O Ciclo da Ansiedade de Performance:</h3>
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+                <p class="text-gray-700">Primeira experiência negativa (falha na ereção)</p>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
+                <p class="text-gray-700">Preocupação e medo de falhar novamente</p>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
+                <p class="text-gray-700">Ansiedade durante o ato sexual</p>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold">4</div>
+                <p class="text-gray-700">Ansiedade interfere na ereção</p>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold">5</div>
+                <p class="text-gray-700">Ciclo se repete e se intensifica</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-yellow-50 p-6 rounded-2xl">
+            <h3 class="text-lg font-semibold text-[#0A2540] mb-3">Fatores Psicológicos Comuns:</h3>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <h4 class="font-medium text-[#0A2540] mb-2">Internos:</h4>
+                <ul class="text-sm text-gray-700 space-y-1">
+                  <li>• Baixa autoestima</li>
+                  <li>• Perfeccionismo</li>
+                  <li>• Depressão</li>
+                  <li>• Estresse crônico</li>
+                  <li>• Traumas passados</li>
+                </ul>
+              </div>
+              <div>
+                <h4 class="font-medium text-[#0A2540] mb-2">Externos:</h4>
+                <ul class="text-sm text-gray-700 space-y-1">
+                  <li>• Problemas no relacionamento</li>
+                  <li>• Pressão da parceira</li>
+                  <li>• Estresse no trabalho</li>
+                  <li>• Problemas financeiros</li>
+                  <li>• Falta de privacidade</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-green-50 p-6 rounded-2xl">
+            <h3 class="text-lg font-semibold text-[#0A2540] mb-3">Quebrando o Ciclo:</h3>
+            <ul class="space-y-2 text-gray-700">
+              <li>• <strong>Mindfulness:</strong> Foque no presente, não no desempenho</li>
+              <li>• <strong>Respiração profunda:</strong> Reduza a ansiedade no momento</li>
+              <li>• <strong>Comunicação:</strong> Converse abertamente com sua parceira</li>
+              <li>• <strong>Expectativas realistas:</strong> Aceite que variações são normais</li>
+              <li>• <strong>Foco no prazer:</strong> Não apenas na ereção</li>
+            </ul>
+          </div>
+
+          <div class="bg-blue-50 p-6 rounded-2xl">
+            <h3 class="text-lg font-semibold text-[#0A2540] mb-3">Técnicas Práticas:</h3>
+            <div class="space-y-3">
+              <div>
+                <h4 class="font-medium text-[#0A2540] mb-1">Técnica 4-7-8:</h4>
+                <p class="text-sm text-gray-700">Inspire por 4, segure por 7, expire por 8 segundos</p>
+              </div>
+              <div>
+                <h4 class="font-medium text-[#0A2540] mb-1">Foco Sensorial:</h4>
+                <p class="text-sm text-gray-700">Concentre-se nas sensações físicas, não nos pensamentos</p>
+              </div>
+              <div>
+                <h4 class="font-medium text-[#0A2540] mb-1">Visualização Positiva:</h4>
+                <p class="text-sm text-gray-700">Imagine experiências sexuais positivas e relaxantes</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-purple-50 p-6 rounded-2xl">
+            <h3 class="text-lg font-semibold text-[#0A2540] mb-3">Quando Buscar Ajuda:</h3>
+            <p class="text-gray-700 leading-relaxed">
+              Se a ansiedade persiste mesmo com essas técnicas, considere terapia sexual ou 
+              psicológica. Muitas vezes, algumas sessões com um profissional especializado 
+              podem quebrar padrões que se mantêm há anos.
+            </p>
+          </div>
+        </div>
+      `
+    },
+    {
+      id: 9,
+      title: "O prazer rápido tem um custo silencioso.",
+      subtitle: "Entenda como hábitos modernos podem afetar sua saúde sexual e como reverter os danos.",
+      thumbnail: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=250&fit=crop&auto=format&q=80",
+      content: `
+        <div class="space-y-6">
+          <h2 class="text-2xl font-bold text-[#0A2540] mb-4">O prazer rápido tem um custo silencioso.</h2>
+          
+          <div class="bg-red-50 p-6 rounded-2xl">
+            <h3 class="text-lg font-semibold text-[#0A2540] mb-3">Hábitos Prejudiciais Modernos:</h3>
+            <ul class="space-y-2 text-gray-700">
+              <li>• <strong>Pornografia excessiva:</strong> Cria expectativas irreais e dessensibilização</li>
+              <li>• <strong>Masturbação compulsiva:</strong> Pode afetar sensibilidade e controle</li>
+              <li>• <strong>Sedentarismo:</strong> Prejudica circulação e produção hormonal</li>
+              <li>• <strong>Alimentação processada:</strong> Afeta energia e saúde vascular</li>
+              <li>• <strong>Excesso de álcool:</strong> Deprime o sistema nervoso</li>
+              <li>• <strong>Falta de sono:</strong> Reduz testosterona e energia</li>
+            </ul>
+          </div>
+
+          <div class="bg-yellow-50 p-6 rounded-2xl">
+            <h3 class="text-lg font-semibold text-[#0A2540] mb-3">O Impacto da Pornografia:</h3>
+            <div class="space-y-3">
+              <p class="text-gray-700 leading-relaxed">
+                O consumo excessivo de pornografia pode causar:
+              </p>
+              <ul class="space-y-2 text-gray-700">
+                <li>• <strong>Dessensibilização:</strong> Necessidade de estímulos mais intensos</li>
+                <li>• <strong>Expectativas irreais:</strong> Performance e anatomia distorcidas</li>
+                <li>• <strong>Disfunção erétil induzida:</strong> Dificuldade com parceiras reais</li>
+                <li>• <strong>Ejaculação precoce:</strong> Hábito de buscar clímax rápido</li>
+                <li>• <strong>Ansiedade social:</strong> Dificuldade de intimidade real</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="bg-blue-50 p-6 rounded-2xl">
+            <h3 class="text-lg font-semibold text-[#0A2540] mb-3">Sinais de Alerta:</h3>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <h4 class="font-medium text-[#0A2540] mb-2">Físicos:</h4>
+                <ul class="text-sm text-gray-700 space-y-1">
+                  <li>• Dificuldade de ereção com parceira</li>
+                  <li>• Perda de sensibilidade</li>
+                  <li>• Ejaculação muito rápida ou demorada</li>
+                  <li>• Fadiga sexual</li>
+                </ul>
+              </div>
+              <div>
+                <h4 class="font-medium text-[#0A2540] mb-2">Psicológicos:</h4>
+                <ul class="text-sm text-gray-700 space-y-1">
+                  <li>• Ansiedade durante o sexo</li>
+                  <li>• Comparações constantes</li>
+                  <li>• Perda de interesse na parceira</li>
+                  <li>• Sentimentos de inadequação</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-green-50 p-6 rounded-2xl">
+            <h3 class="text-lg font-semibold text-[#0A2540] mb-3">Estratégias de Recuperação:</h3>
+            <ul class="space-y-2 text-gray-700">
+              <li>• <strong>Detox digital:</strong> Reduzir ou eliminar pornografia</li>
+              <li>• <strong>Mindfulness sexual:</strong> Foco nas sensações reais</li>
+              <li>• <strong>Exercícios de sensibilidade:</strong> Reconectar com o próprio corpo</li>
+              <li>• <strong>Comunicação com parceira:</strong> Honestidade sobre dificuldades</li>
+              <li>• <strong>Paciência:</strong> Recuperação leva tempo (2-6 meses)</li>
+            </ul>
+          </div>
+
+          <div class="bg-purple-50 p-6 rounded-2xl">
+            <h3 class="text-lg font-semibold text-[#0A2540] mb-3">Reconstruindo Hábitos Saudáveis:</h3>
+            <p class="text-gray-700 leading-relaxed">
+              A boa notícia é que o cérebro é plástico e pode se readaptar. Substituir hábitos 
+              prejudiciais por atividades saudáveis como exercícios, hobbies e relacionamentos 
+              reais pode restaurar a função sexual natural. O processo requer disciplina, mas 
+              os resultados valem o esforço.
+            </p>
+          </div>
+        </div>
+      `
+    },
+    {
+      id: 10,
+      title: "Recuperar o controle é possível. E começa agora.",
+      subtitle: "Seu plano de ação para retomar a confiança e ter uma vida sexual plena e satisfatória.",
+      thumbnail: "https://k6hrqrxuu8obbfwn.public.blob.vercel-storage.com/temp/2eff52d6-e1c9-4ac9-add9-1ce883eb97ad.png",
+      content: `
+        <div class="space-y-6">
+          <h2 class="text-2xl font-bold text-[#0A2540] mb-4">Recuperar o controle é possível. E começa agora.</h2>
+          
+          <div class="bg-green-50 p-6 rounded-2xl">
+            <h3 class="text-lg font-semibold text-[#0A2540] mb-3">Seu Plano de Ação - Primeiros 30 Dias:</h3>
+            <div class="space-y-3">
+              <div class="flex items-start gap-3">
+                <div class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">1</div>
+                <div>
+                  <h4 class="font-medium text-[#0A2540]">Avaliação Médica</h4>
+                  <p class="text-sm text-gray-700">Consulte um urologista para exames básicos (testosterona, glicemia, colesterol)</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">2</div>
+                <div>
+                  <h4 class="font-medium text-[#0A2540]">Mudanças no Estilo de Vida</h4>
+                  <p class="text-sm text-gray-700">Comece exercícios leves, melhore a alimentação e estabeleça rotina de sono</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">3</div>
+                <div>
+                  <h4 class="font-medium text-[#0A2540]">Comunicação</h4>
+                  <p class="text-sm text-gray-700">Converse abertamente com sua parceira sobre suas preocupações</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-blue-50 p-6 rounded-2xl">
+            <h3 class="text-lg font-semibold text-[#0A2540] mb-3">Metas para os Próximos 3 Meses:</h3>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <h4 class="font-medium text-[#0A2540] mb-2">Saúde Física:</h4>
+                <ul class="text-sm text-gray-700 space-y-1">
+                  <li>• Exercitar-se 4x por semana</li>
+                  <li>• Perder 5-10% do peso (se necessário)</li>
+                  <li>• Controlar pressão e glicemia</li>
+                  <li>• Parar de fumar (se aplicável)</li>
+                </ul>
+              </div>
+              <div>
+                <h4 class="font-medium text-[#0A2540] mb-2">Saúde Mental:</h4>
+                <ul class="text-sm text-gray-700 space-y-1">
+                  <li>• Reduzir ansiedade de performance</li>
+                  <li>• Melhorar autoestima</li>
+                  <li>• Fortalecer relacionamento</li>
+                  <li>• Gerenciar estresse</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-yellow-50 p-6 rounded-2xl">
+            <h3 class="text-lg font-semibold text-[#0A2540] mb-3">Opções de Tratamento:</h3>
+            <ul class="space-y-2 text-gray-700">
+              <li>• <strong>Medicamentos orais:</strong> Sildenafil, Tadalafil (com prescrição médica)</li>
+              <li>• <strong>Reposição hormonal:</strong> Se testosterona baixa confirmada</li>
+              <li>• <strong>Terapia psicológica:</strong> Para ansiedade e questões emocionais</li>
+              <li>• <strong>Dispositivos auxiliares:</strong> Bombas de vácuo, anéis</li>
+              <li>• <strong>Tratamentos avançados:</strong> Ondas de choque, injeções (casos específicos)</li>
+            </ul>
+          </div>
+
+          <div class="bg-purple-50 p-6 rounded-2xl">
+            <h3 class="text-lg font-semibold text-[#0A2540] mb-3">Expectativas Realistas:</h3>
+            <div class="space-y-3">
+              <div>
+                <h4 class="font-medium text-[#0A2540] mb-1">Primeiras 2 semanas:</h4>
+                <p class="text-sm text-gray-700">Melhora na energia e disposição geral</p>
+              </div>
+              <div>
+                <h4 class="font-medium text-[#0A2540] mb-1">1-2 meses:</h4>
+                <p class="text-sm text-gray-700">Redução da ansiedade, melhora na circulação</p>
+              </div>
+              <div>
+                <h4 class="font-medium text-[#0A2540] mb-1">3-6 meses:</h4>
+                <p class="text-sm text-gray-700">Resultados significativos na função sexual</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-gradient-to-r from-[#0A2540] to-[#0D2F4A] text-white p-6 rounded-2xl">
+            <h3 class="text-lg font-semibold mb-3">Sua Jornada Começa Hoje</h3>
+            <p class="leading-relaxed">
+              Lembre-se: você não está sozinho nesta jornada. Milhões de homens enfrentam 
+              desafios similares e encontram soluções eficazes. O primeiro passo é o mais 
+              importante, e você já o deu ao buscar informação e ajuda. Com determinação, 
+              acompanhamento médico adequado e paciência, você pode recuperar sua confiança 
+              e ter uma vida sexual plena e satisfatória.
+            </p>
+          </div>
+        </div>
+      `
     }
   ]
 
   const menuItems = [
     { id: 'overview', label: 'Visão Geral', icon: User },
-    { id: 'treatments-dr-potencia', label: 'Tratamentos +POTENTE', icon: BookOpen },
+    { id: 'treatments-dr-potencia', label: 'Tratamentos do Dr. Potência', icon: BookOpen },
     { id: 'messages', label: 'Mensagens', icon: MessageCircle },
     { id: 'settings', label: 'Configurações', icon: Settings },
   ]
@@ -332,16 +749,6 @@ export default function PatientDashboard({ onLogout, onBackToHome }: PatientDash
     setSelectedSlide(educationalSlides[prevIndex])
   }
 
-  const handleLogout = async () => {
-    setLogoutMessage('Encerrando sessão...')
-    await authService.logout()
-    setLogoutMessage('Sessão encerrada')
-    
-    setTimeout(() => {
-      onLogout()
-    }, 1500)
-  }
-
   const renderContent = () => {
     switch (activeTab) {
       case 'overview':
@@ -349,7 +756,7 @@ export default function PatientDashboard({ onLogout, onBackToHome }: PatientDash
           <div className="space-y-8">
             {/* Welcome Section */}
             <div className="bg-gradient-to-r from-[#0A2540] to-[#0D2F4A] text-white rounded-3xl p-8">
-              <h1 className="text-3xl font-bold mb-2">Olá, {authState.user?.name?.split(' ')[0] || 'Usuário'}!</h1>
+              <h1 className="text-3xl font-bold mb-2">Olá, Carlos!</h1>
               <p className="text-xl text-gray-200">Como você está se sentindo hoje?</p>
             </div>
 
@@ -361,8 +768,8 @@ export default function PatientDashboard({ onLogout, onBackToHome }: PatientDash
                     <BookOpen className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-[#0A2540]">5</div>
-                    <div className="text-gray-600">Conteúdos disponíveis</div>
+                    <div className="text-2xl font-bold text-[#0A2540]">12</div>
+                    <div className="text-gray-600">Conteúdos assistidos</div>
                   </div>
                 </div>
               </div>
@@ -373,8 +780,8 @@ export default function PatientDashboard({ onLogout, onBackToHome }: PatientDash
                     <CheckCircle className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-[#0A2540]">100%</div>
-                    <div className="text-gray-600">Acesso liberado</div>
+                    <div className="text-2xl font-bold text-[#0A2540]">85%</div>
+                    <div className="text-gray-600">Progresso geral</div>
                   </div>
                 </div>
               </div>
@@ -388,12 +795,12 @@ export default function PatientDashboard({ onLogout, onBackToHome }: PatientDash
                   <h3 className="text-lg font-semibold text-[#0A2540] mb-4">Conteúdo Educativo</h3>
                   <div className="space-y-3">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Slides disponíveis:</span>
-                      <span className="font-medium">5 de 5</span>
+                      <span className="text-gray-600">Slides lidos:</span>
+                      <span className="font-medium">12 de 20</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Último acesso:</span>
-                      <span className="font-medium">Agora</span>
+                      <span className="font-medium">Hoje</span>
                     </div>
                   </div>
                 </div>
@@ -402,20 +809,20 @@ export default function PatientDashboard({ onLogout, onBackToHome }: PatientDash
                   <div className="space-y-4">
                     <div>
                       <div className="flex justify-between mb-2">
-                        <span className="text-gray-600">Acesso</span>
-                        <span className="font-medium">100%</span>
+                        <span className="text-gray-600">Compreensão</span>
+                        <span className="font-medium">85%</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-3">
-                        <div className="bg-[#00796B] h-3 rounded-full" style={{ width: '100%' }}></div>
+                        <div className="bg-[#00796B] h-3 rounded-full" style={{ width: '85%' }}></div>
                       </div>
                     </div>
                     <div>
                       <div className="flex justify-between mb-2">
-                        <span className="text-gray-600">Disponibilidade</span>
-                        <span className="font-medium">100%</span>
+                        <span className="text-gray-600">Engajamento</span>
+                        <span className="font-medium">90%</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-3">
-                        <div className="bg-[#00796B] h-3 rounded-full" style={{ width: '100%' }}></div>
+                        <div className="bg-[#00796B] h-3 rounded-full" style={{ width: '90%' }}></div>
                       </div>
                     </div>
                   </div>
@@ -428,25 +835,25 @@ export default function PatientDashboard({ onLogout, onBackToHome }: PatientDash
               <h2 className="text-2xl font-bold text-[#0A2540] mb-6">Atividade Recente</h2>
               <div className="space-y-4">
                 <div className="flex items-center gap-4 p-4 bg-[#F5F7FA] rounded-2xl">
-                  <div className="w-10 h-10 bg-[#00796B] rounded-full flex items-center justify-center">
-                    <User className="w-5 h-5 text-white" />
+                  <div className="w-10 h-10 bg-[#D72638] rounded-full flex items-center justify-center">
+                    <FileText className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex-1">
-                    <div className="font-medium text-[#0A2540]">Login realizado</div>
-                    <div className="text-gray-600 text-sm">Acesso à área do cliente</div>
+                    <div className="font-medium text-[#0A2540]">Slides lidos</div>
+                    <div className="text-gray-600 text-sm">"Causas e Soluções para EP"</div>
                   </div>
-                  <div className="text-gray-500 text-sm">Agora</div>
+                  <div className="text-gray-500 text-sm">1 dia atrás</div>
                 </div>
 
                 <div className="flex items-center gap-4 p-4 bg-[#F5F7FA] rounded-2xl">
                   <div className="w-10 h-10 bg-[#0A2540] rounded-full flex items-center justify-center">
-                    <BookOpen className="w-5 h-5 text-white" />
+                    <MessageCircle className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex-1">
-                    <div className="font-medium text-[#0A2540]">Conteúdos disponíveis</div>
-                    <div className="text-gray-600 text-sm">5 slides educativos liberados</div>
+                    <div className="font-medium text-[#0A2540]">Mensagem do Dr. Silva</div>
+                    <div className="text-gray-600 text-sm">Como você está se sentindo com o novo tratamento?</div>
                   </div>
-                  <div className="text-gray-500 text-sm">Disponível</div>
+                  <div className="text-gray-500 text-sm">3 dias atrás</div>
                 </div>
               </div>
             </div>
@@ -457,7 +864,7 @@ export default function PatientDashboard({ onLogout, onBackToHome }: PatientDash
         return (
           <div className="space-y-8">
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-[#0A2540] mb-4">Tratamentos +POTENTE</h1>
+              <h1 className="text-3xl font-bold text-[#0A2540] mb-4">Tratamentos do Dr. Potência</h1>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                 Você não está sozinho. Isso tem solução! Aprenda sobre saúde sexual masculina de forma simples e acessível.
               </p>
@@ -502,16 +909,16 @@ export default function PatientDashboard({ onLogout, onBackToHome }: PatientDash
                 <h3 className="text-2xl font-bold mb-4">Seu Progresso Educativo</h3>
                 <div className="grid md:grid-cols-3 gap-6">
                   <div>
-                    <div className="text-3xl font-bold text-[#00796B] mb-2">100%</div>
-                    <div className="text-gray-200">Conteúdo Disponível</div>
+                    <div className="text-3xl font-bold text-[#00796B] mb-2">30%</div>
+                    <div className="text-gray-200">Conteúdo Concluído</div>
                   </div>
                   <div>
-                    <div className="text-3xl font-bold text-[#00796B] mb-2">5</div>
-                    <div className="text-gray-200">Slides Liberados</div>
+                    <div className="text-3xl font-bold text-[#00796B] mb-2">3h</div>
+                    <div className="text-gray-200">Tempo de Estudo</div>
                   </div>
                   <div>
-                    <div className="text-3xl font-bold text-[#00796B] mb-2">∞</div>
-                    <div className="text-gray-200">Acesso Ilimitado</div>
+                    <div className="text-3xl font-bold text-[#00796B] mb-2">10</div>
+                    <div className="text-gray-200">Slides Disponíveis</div>
                   </div>
                 </div>
               </div>
@@ -543,18 +950,28 @@ export default function PatientDashboard({ onLogout, onBackToHome }: PatientDash
                     <User className="w-4 h-4 text-white" />
                   </div>
                   <div className="bg-[#F5F7FA] rounded-2xl p-4 max-w-md">
-                    <p className="text-gray-800">Olá {authState.user?.name?.split(' ')[0]}! Como você está se sentindo? Tem alguma dúvida sobre os conteúdos educativos?</p>
-                    <p className="text-xs text-gray-500 mt-2">Agora</p>
+                    <p className="text-gray-800">Olá Carlos! Como você está se sentindo com o novo tratamento? Notou alguma melhora?</p>
+                    <p className="text-xs text-gray-500 mt-2">5 dias atrás</p>
                   </div>
                 </div>
 
                 <div className="flex gap-4 justify-end">
                   <div className="bg-[#00796B] text-white rounded-2xl p-4 max-w-md">
-                    <p>Olá doutor! Estou me sentindo bem e achei os conteúdos muito esclarecedores. Obrigado!</p>
-                    <p className="text-xs text-gray-200 mt-2">Agora</p>
+                    <p>Olá doutor! Estou me sentindo muito melhor. O tratamento está funcionando bem e não tive efeitos colaterais.</p>
+                    <p className="text-xs text-gray-200 mt-2">4 dias atrás</p>
                   </div>
                   <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center flex-shrink-0">
                     <User className="w-4 h-4 text-white" />
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <div className="w-8 h-8 bg-[#0A2540] rounded-full flex items-center justify-center flex-shrink-0">
+                    <User className="w-4 h-4 text-white" />
+                  </div>
+                  <div className="bg-[#F5F7FA] rounded-2xl p-4 max-w-md">
+                    <p className="text-gray-800">Excelente! Continue com o tratamento conforme prescrito. Vamos agendar uma consulta de acompanhamento em 2 semanas.</p>
+                    <p className="text-xs text-gray-500 mt-2">4 dias atrás</p>
                   </div>
                 </div>
               </div>
@@ -588,41 +1005,39 @@ export default function PatientDashboard({ onLogout, onBackToHome }: PatientDash
                     <label className="block text-sm font-medium text-gray-700 mb-2">Nome Completo</label>
                     <input
                       type="text"
-                      value={authState.user?.name || ''}
+                      value="Carlos Mendes"
                       className="w-full p-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-3 focus:ring-[#00796B] focus:border-[#00796B]"
-                      readOnly
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
                     <input
                       type="email"
-                      value={authState.user?.email || ''}
+                      value="carlos@email.com"
                       className="w-full p-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-3 focus:ring-[#00796B] focus:border-[#00796B]"
-                      readOnly
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Telefone</label>
                     <input
                       type="tel"
-                      value={authState.user?.phone || ''}
+                      value="(11) 99999-9999"
                       className="w-full p-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-3 focus:ring-[#00796B] focus:border-[#00796B]"
-                      readOnly
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Data de Nascimento</label>
                     <input
                       type="date"
-                      value={authState.user?.birthDate || ''}
+                      value="1972-05-15"
                       className="w-full p-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-3 focus:ring-[#00796B] focus:border-[#00796B]"
-                      readOnly
                     />
                   </div>
                 </div>
                 <div className="mt-6">
-                  <p className="text-sm text-gray-500">Para alterar suas informações, entre em contato com o suporte.</p>
+                  <button className="bg-[#00796B] text-white px-6 py-3 rounded-2xl hover:bg-[#00695C] transition-colors font-medium focus:outline-none focus:ring-3 focus:ring-[#00796B]">
+                    Salvar Alterações
+                  </button>
                 </div>
               </div>
 
@@ -691,19 +1106,10 @@ export default function PatientDashboard({ onLogout, onBackToHome }: PatientDash
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="text-2xl font-bold text-[#0B2A47]">
-              +POTENTE
+            <div className="text-2xl font-bold text-[#0A2540]">
+              DR. POTÊNCIA
             </div>
             <div className="flex items-center gap-4">
-              {/* Back to Home Button */}
-              <button 
-                onClick={onBackToHome}
-                className="flex items-center gap-2 px-4 py-2 text-[#0A2540] hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                <Home className="w-5 h-5" />
-                <span className="hidden sm:inline">Voltar ao Início</span>
-              </button>
-              
               <button className="p-2 hover:bg-gray-100 rounded-lg">
                 <Bell className="w-5 h-5 text-gray-600" />
               </button>
@@ -711,21 +1117,12 @@ export default function PatientDashboard({ onLogout, onBackToHome }: PatientDash
                 <div className="w-8 h-8 bg-[#0A2540] rounded-full flex items-center justify-center">
                   <User className="w-5 h-5 text-white" />
                 </div>
-                <span className="font-medium text-[#0A2540]">
-                  {authState.user?.name?.split(' ')[0] || 'Usuário'}
-                </span>
+                <span className="font-medium text-[#0A2540]">Carlos M.</span>
               </div>
             </div>
           </div>
         </div>
       </header>
-
-      {/* Logout Message */}
-      {logoutMessage && (
-        <div className="fixed top-4 right-4 bg-blue-50 text-blue-800 px-6 py-3 rounded-2xl shadow-lg z-50 border border-blue-200">
-          {logoutMessage}
-        </div>
-      )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid lg:grid-cols-4 gap-8">
@@ -752,10 +1149,7 @@ export default function PatientDashboard({ onLogout, onBackToHome }: PatientDash
                 })}
                 
                 <div className="pt-4 border-t">
-                  <button 
-                    onClick={handleLogout}
-                    className="w-full flex items-center gap-3 p-3 rounded-2xl text-red-600 hover:bg-red-50 transition-colors text-left focus:outline-none focus:ring-3 focus:ring-red-500"
-                  >
+                  <button className="w-full flex items-center gap-3 p-3 rounded-2xl text-red-600 hover:bg-red-50 transition-colors text-left focus:outline-none focus:ring-3 focus:ring-red-500">
                     <LogOut className="w-5 h-5" />
                     Sair
                   </button>

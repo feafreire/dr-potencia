@@ -1,53 +1,20 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { ChevronRight, Shield, Clock, Users, Star, Menu, X, Phone, Mail, BookOpen } from 'lucide-react'
 import MedicalQuiz from '@/components/MedicalQuiz'
 import PatientDashboard from '@/components/PatientDashboard'
-import LoginPage from '@/components/LoginPage'
-import { authService, type AuthState } from '@/lib/auth'
 
 export default function DrPotenciaHome() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [currentView, setCurrentView] = useState('home') // 'home', 'quiz', 'dashboard', 'login'
-  const [authState, setAuthState] = useState<AuthState>(authService.getAuthState())
-
-  useEffect(() => {
-    const unsubscribe = authService.subscribe(setAuthState)
-    return unsubscribe
-  }, [])
-
-  // Verificar se a sessão é válida ao tentar acessar o dashboard
-  const handleDashboardAccess = () => {
-    if (authState.isAuthenticated && authService.isSessionValid()) {
-      setCurrentView('dashboard')
-    } else {
-      setCurrentView('login')
-    }
-  }
-
-  const handleLoginSuccess = () => {
-    setCurrentView('dashboard')
-  }
-
-  const handleLogout = () => {
-    setCurrentView('home')
-  }
-
-  const handleBackToHome = () => {
-    setCurrentView('home')
-  }
-
-  if (currentView === 'login') {
-    return <LoginPage onLoginSuccess={handleLoginSuccess} onBackToHome={handleBackToHome} />
-  }
+  const [currentView, setCurrentView] = useState('home') // 'home', 'quiz', 'dashboard'
 
   if (currentView === 'quiz') {
     return <MedicalQuiz />
   }
 
   if (currentView === 'dashboard') {
-    return <PatientDashboard onLogout={handleLogout} onBackToHome={handleBackToHome} />
+    return <PatientDashboard />
   }
 
   return (
@@ -75,10 +42,10 @@ export default function DrPotenciaHome() {
                 Sobre Nós
               </a>
               <button 
-                onClick={handleDashboardAccess}
+                onClick={() => setCurrentView('dashboard')}
                 className="text-[#222222] hover:text-[#0A2540] transition-colors text-lg"
               >
-                Área do Cliente
+                Área do Paciente
               </button>
               <button 
                 onClick={() => setCurrentView('quiz')}
@@ -111,10 +78,10 @@ export default function DrPotenciaHome() {
                   Sobre Nós
                 </a>
                 <button 
-                  onClick={handleDashboardAccess}
+                  onClick={() => setCurrentView('dashboard')}
                   className="text-[#222222] hover:text-[#0A2540] transition-colors text-lg py-2 text-left"
                 >
-                  Área do Cliente
+                  Área do Paciente
                 </button>
                 <button 
                   onClick={() => setCurrentView('quiz')}
@@ -137,8 +104,7 @@ export default function DrPotenciaHome() {
                 Recupere sua <span style={{color: '#D72638'}}>confiança</span> na <span style={{color: '#D72638'}}>hora H</span>
               </h1>
               <p className="text-xl sm:text-2xl leading-relaxed mb-8 text-gray-200">
-                Recupere o controle, a confiança e a potência que fazem parte de você.
-                Os especialistas médicos da +Potente oferecem avaliação gratuita e tratamento comprovado por décadas de experiência.
+                Tratamento médico eficaz para trazer de volta sua confiança, controle e potência. Faça sua Avaliação Online Gratuita com o Dr. Potência, especialista no assunto há 37 anos.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <button 
@@ -324,9 +290,10 @@ export default function DrPotenciaHome() {
               <div className="w-20 h-20 bg-[#0A2540] rounded-full flex items-center justify-center mx-auto mb-6">
                 <span className="text-white text-2xl font-bold">1</span>
               </div>
-              <h3 className="text-2xl font-bold text-[#0A2540] mb-4 text-center">1. Consulta Online</h3>
-              <p className="text-lg text-gray-600 leading-relaxed text-center">
-                Responda um breve questionário médico em menos de 2 minutos, com total sigilo e sem precisar aparecer. Simples, rápido e fácil.
+              <h3 className="text-2xl font-bold text-[#0A2540] mb-4">Consulta Online</h3>
+              <p className="text-lg text-gray-600 leading-relaxed">
+                Responda um simples questionário médico no conforto da sua casa em apenas 2 minutos.
+                Totalmente sigiloso e seguro — sem necessidade de vídeo ou exposição.
               </p>
             </div>
 
@@ -334,9 +301,9 @@ export default function DrPotenciaHome() {
               <div className="w-20 h-20 bg-[#D72638] rounded-full flex items-center justify-center mx-auto mb-6">
                 <span className="text-white text-2xl font-bold">2</span>
               </div>
-              <h3 className="text-2xl font-bold text-[#0A2540] mb-4 text-center">2. Avaliação Médica</h3>
-              <p className="text-lg text-gray-600 leading-relaxed text-center">
-                Nossa equipe médica analisa suas respostas e indica o tratamento mais eficaz para o seu caso, com base em protocolos clínicos comprovados e de forma totalmente personalizada.
+              <h3 className="text-2xl font-bold text-[#0A2540] mb-4">Avaliação Médica</h3>
+              <p className="text-lg text-gray-600 leading-relaxed">
+                O Dr. Potência e sua equipe analisam suas respostas e definem o tratamento mais eficaz para o seu caso, de forma personalizada.
               </p>
             </div>
 
@@ -344,9 +311,10 @@ export default function DrPotenciaHome() {
               <div className="w-20 h-20 bg-[#00796B] rounded-full flex items-center justify-center mx-auto mb-6">
                 <span className="text-white text-2xl font-bold">3</span>
               </div>
-              <h3 className="text-2xl font-bold text-[#0A2540] mb-4 text-center">3. Acompanhamento Exclusivo +Potente</h3>
-              <p className="text-lg text-gray-600 leading-relaxed text-center">
-                Você recebe uma análise completa e recomendações personalizadas direto no WhatsApp — com total privacidade e suporte especializado.
+              <h3 className="text-2xl font-bold text-[#0A2540] mb-4">Análise Exclusiva do Dr. Potência</h3>
+              <p className="text-lg text-gray-600 leading-relaxed">
+                Após a análise do seu questionário, o Dr. Potência grava um vídeo explicando seu caso e mostrando o melhor caminho para melhorar seu desempenho.
+                Tudo de forma privada, segura e enviada diretamente no seu WhatsApp.
               </p>
             </div>
           </div>
@@ -500,14 +468,14 @@ export default function DrPotenciaHome() {
                 </div>
                 <div className="flex items-center gap-3">
                   <Mail size={18} />
-                  <span>contato@maispotente.com</span>
+                  <span>contato@drpotencia.com.br</span>
                 </div>
               </div>
             </div>
           </div>
           
           <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 +POTENTE. Todos os direitos reservados. CNPJ: 50.458.604/0001-54</p>
+            <p>&copy; 2024 Dr. Potência. Todos os direitos reservados. CNPJ: 00.000.000/0001-00</p>
           </div>
         </div>
       </footer>
