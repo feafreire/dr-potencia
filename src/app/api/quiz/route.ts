@@ -1,68 +1,98 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase'
+import { createClient } from '@supabase/supabase-js'
+
+// Tipos para validação
+type Payload = {
+  userId?: string | null
+  sessionId?: string | null
+  answers: Record<string, any>
+  score?: number | null
+}
+
+// Configuração do Supabase com Service Role (apenas server-side)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+if (!supabaseUrl) {
+  console.error('❌ NEXT_PUBLIC_SUPABASE_URL não encontrada nas variáveis de ambiente')
+}
+
+if (!supabaseServiceKey) {
+  console.error('❌ SUPABASE_SERVICE_ROLE_KEY não encontrada nas variáveis de ambiente')
+}
+
+const supabase = supabaseUrl && supabaseServiceKey 
+  ? createClient(supabaseUrl, supabaseServiceKey)
+  : null
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId, sessionId, answers, score } = await request.json()
-
-    if (!answers || typeof answers !== 'object') {
+    // Validar se o Supabase está configurado
+    if (!supabase) {
+      console.error('❌ Supabase não configurado - verifique as variáveis de ambiente')
       return NextResponse.json(
-        { ok: false, error: 'Respostas são obrigatórias' },
-        { status: 400 }
-      )
-    }
-
-    if (!userId && !sessionId) {
-      return NextResponse.json(
-        { ok: false, error: 'userId ou sessionId deve ser fornecido' },
-        { status: 400 }
-      )
-    }
-
-    const supabase = createAdminClient()
-
-    // Calcular score se não fornecido
-    let calculatedScore = score || 0
-    if (!score) {
-      // Lógica simples de pontuação baseada no número de respostas
-      calculatedScore = Object.keys(answers).length * 10
-    }
-
-    const { data, error } = await supabase
-      .from('quiz_responses')
-      .insert({
-        user_id: userId || null,
-        session_id: sessionId || null,
-        answers,
-        score: calculatedScore
-      })
-      .select()
-      .single()
-
-    if (error) {
-      console.error('Erro ao salvar quiz:', error)
-      return NextResponse.json(
-        { ok: false, error: 'Erro ao salvar respostas do quiz' },
+        { ok: false, error: 'Configuração do servidor incompleta' },
         { status: 500 }
       )
     }
 
-    // Se o usuário fizer login depois, vincular respostas anônimas
-    if (userId && sessionId) {
-      await supabase
-        .from('quiz_responses')
-        .update({ user_id: userId })
-        .eq('session_id', sessionId)
-        .is('user_id', null)
+    // Parse do body
+    let body: Payload
+    try {
+      body = await request.json()
+    } catch (error) {
+      console.error('❌ Erro ao fazer parse do JSON:', error)
+      return NextResponse.json(
+        { ok: false, error: 'JSON inválido' },
+        { status: 400 }
+      )
     }
 
-    return NextResponse.json({ 
-      ok: true, 
-      quizResponse: data,
-      message: 'Respostas salvas com sucesso!'
+    // Validação do payload
+    if (!body.answers || typeof body.answers !== 'object' || Object.keys(body.answers).length === 0) {
+      console.error('❌ Answers vazio ou inválido:', body.answers)
+      return NextResponse.json(
+        { ok: false, error: 'answers required' },
+        { status: 400 }
+      )
+    }
+
+    console.log('✅ Dados recebidos:', {
+      userId: body.userId,
+      sessionId: body.sessionId,
+      answersCount: Object.keys(body.answers).length,
+      score: body.score
     })
+
+    // Inserir na tabela public.respostas_do_quiz
+    const { data, error } = await supabase
+      .from('respostas_do_quiz')
+      .insert({
+        user_id: body.userId,
+        session_id: body.sessionId,
+        answers: body.answers,
+        score: body.score
+      })
+      .select('id')
+      .single()
+
+    if (error) {
+      console.error('❌ Erro do Supabase ao inserir:', error)
+      return NextResponse.json(
+        { ok: false, error: `Erro no banco de dados: ${error.message}` },
+        { status: 500 }
+      )
+    }
+
+    console.log('✅ Quiz salvo com sucesso! ID:', data?.id)
+
+    return NextResponse.json(
+      { ok: true, id: data?.id },
+      { status: 200 }
+    )
+
   } catch (error) {
-    console.error('Erro na API de quiz:', error)
+    console.error('❌ Erro interno do servidor:', error)
     return NextResponse.json(
       { ok: false, error: 'Erro interno do servidor' },
       { status: 500 }
@@ -70,45 +100,73 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url)
-    const userId = searchParams.get('userId')
-    const sessionId = searchParams.get('sessionId')
+// Rejeitar outros métodos HTTP
+export async function GET() {
+  return NextResponse.json(
+    { ok: false, error: 'Método não permitido' },
+    { status: 405 }
+  )
+}
 
-    if (!userId && !sessionId) {
-      return NextResponse.json(
-        { ok: false, error: 'userId ou sessionId é obrigatório' },
-        { status: 400 }
-      )
+export async function PUT() {
+  return NextResponse.json(
+    { ok: false, error: 'Método não permitido' },
+    { status: 405 }
+  )
+}
+
+export async function DELETE() {
+  return NextResponse.json(
+    { ok: false, error: 'Método não permitido' },
+    { status: 405 }
+  )
+}
+
+// Teste automático em desenvolvimento
+if (process.env.NODE_ENV === 'development') {
+  console.log('🧪 Modo desenvolvimento - teste automático disponível')
+  
+  // Função de teste que pode ser chamada manualmente
+  const testQuizAPI = async () => {
+    try {
+      const testPayload = {
+        userId: null,
+        sessionId: 'test-session-' + Date.now(),
+        answers: { test: true, question1: 'Resposta de teste' },
+        score: 50
+      }
+
+      console.log('🧪 Executando teste automático da API /api/quiz...')
+      console.log('📤 Payload de teste:', testPayload)
+
+      // Simular chamada interna (não HTTP real)
+      if (supabase) {
+        const { data, error } = await supabase
+          .from('respostas_do_quiz')
+          .insert({
+            user_id: testPayload.userId,
+            session_id: testPayload.sessionId,
+            answers: testPayload.answers,
+            score: testPayload.score
+          })
+          .select('id')
+          .single()
+
+        if (error) {
+          console.log('❌ Teste falhou:', error.message)
+        } else {
+          console.log('✅ Teste passou! ID criado:', data?.id)
+        }
+      }
+    } catch (error) {
+      console.log('❌ Erro no teste:', error)
     }
-
-    const supabase = createAdminClient()
-
-    let query = supabase.from('quiz_responses').select('*')
-
-    if (userId) {
-      query = query.eq('user_id', userId)
-    } else if (sessionId) {
-      query = query.eq('session_id', sessionId)
-    }
-
-    const { data, error } = await query.order('created_at', { ascending: false })
-
-    if (error) {
-      console.error('Erro ao buscar respostas do quiz:', error)
-      return NextResponse.json(
-        { ok: false, error: 'Erro ao buscar respostas' },
-        { status: 500 }
-      )
-    }
-
-    return NextResponse.json({ ok: true, responses: data })
-  } catch (error) {
-    console.error('Erro na API de quiz:', error)
-    return NextResponse.json(
-      { ok: false, error: 'Erro interno do servidor' },
-      { status: 500 }
-    )
   }
+
+  // Executar teste após 5 segundos (apenas uma vez)
+  setTimeout(() => {
+    if (process.env.NODE_ENV === 'development') {
+      testQuizAPI()
+    }
+  }, 5000)
 }

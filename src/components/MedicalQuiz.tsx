@@ -1,7 +1,9 @@
-"use client"
+'use client'
 
-import React, { useState } from 'react'
-import { ChevronRight, ChevronLeft, Shield, Clock, CheckCircle } from 'lucide-react'
+import React, { useState, useEffect } from 'react'
+import { ChevronRight, ChevronLeft, Shield, Clock, CheckCircle, Loader2, AlertCircle } from 'lucide-react'
+import { authService } from '@/lib/auth'
+import { useRouter } from 'next/navigation'
 
 interface QuizQuestion {
   id: number
@@ -20,18 +22,24 @@ const quizQuestions: QuizQuestion[] = [
   },
   {
     id: 2,
+    question: "Qual seu e-mail?",
+    type: 'text',
+    placeholder: "Digite seu e-mail..."
+  },
+  {
+    id: 3,
     question: "Qual seu número de WhatsApp para o Dr. Potência poder entrar em contato:",
     type: 'text',
     placeholder: "Ex: (11) 99999-0000"
   },
   {
-    id: 3,
+    id: 4,
     question: "Qual a sua idade?",
     options: ["18–25", "26–35", "36–45", "46–55", "56+"],
     type: 'single'
   },
   {
-    id: 4,
+    id: 5,
     question: "Você está em qual dessas situações no momento?",
     options: [
       "Casado ou em relacionamento fixo",
@@ -42,7 +50,7 @@ const quizQuestions: QuizQuestion[] = [
     type: 'single'
   },
   {
-    id: 5,
+    id: 6,
     question: "Como você classificaria sua rotina hoje?",
     options: [
       "Estressante, trabalho e tenho pouco tempo livre",
@@ -53,7 +61,7 @@ const quizQuestions: QuizQuestion[] = [
     type: 'single'
   },
   {
-    id: 6,
+    id: 7,
     question: "Qual dessas situações mais descreve o que você vem enfrentando?",
     options: [
       "Dificuldade em manter ereção firme",
@@ -65,7 +73,7 @@ const quizQuestions: QuizQuestion[] = [
     type: 'single'
   },
   {
-    id: 7,
+    id: 8,
     question: "Há quanto tempo você percebe esse problema?",
     options: [
       "Menos de 3 meses",
@@ -75,7 +83,7 @@ const quizQuestions: QuizQuestion[] = [
     type: 'single'
   },
   {
-    id: 8,
+    id: 9,
     question: "Isso te incomoda o suficiente a ponto de procurar ajuda?",
     options: [
       "Sim, quero resolver logo",
@@ -85,7 +93,7 @@ const quizQuestions: QuizQuestion[] = [
     type: 'single'
   },
   {
-    id: 9,
+    id: 10,
     question: "Consome álcool ou fuma?",
     options: [
       "Bebo e fumo com frequência",
@@ -96,7 +104,7 @@ const quizQuestions: QuizQuestion[] = [
     type: 'single'
   },
   {
-    id: 10,
+    id: 11,
     question: "Você já tentou algum tipo de tratamento?",
     options: [
       "Sim, mas não funcionou",
@@ -105,7 +113,7 @@ const quizQuestions: QuizQuestion[] = [
     type: 'single'
   },
   {
-    id: 11,
+    id: 12,
     question: "Se encontrasse uma solução segura e discreta, você estaria disposto a testar?",
     options: [
       "Sim, imediatamente",
@@ -115,7 +123,7 @@ const quizQuestions: QuizQuestion[] = [
     type: 'single'
   },
   {
-    id: 12,
+    id: 13,
     question: "O que mais te motiva a querer resolver isso?",
     options: [
       "Melhorar minha vida sexual e autoestima",
@@ -125,7 +133,7 @@ const quizQuestions: QuizQuestion[] = [
     type: 'single'
   },
   {
-    id: 13,
+    id: 14,
     question: "Se encontrasse uma solução comprovada e discreta para melhorar sua saúde sexual, quanto estaria disposto a investir por mês?",
     options: [
       "Até R$100",
@@ -137,10 +145,43 @@ const quizQuestions: QuizQuestion[] = [
   }
 ]
 
+// Função para salvar no Google Sheets
+async function saveQuizResponse(payload: any) {
+  const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwW_4A_-utrY5pCj6lCTv8_jSOQY-Ks_DaYP67RgmqyY_R09yFpGxCHQ6yeg5u3C5TQnw/exec'
+  
+  const res = await fetch(WEBAPP_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      token: 'potente123',
+      sessionId: window.localStorage.getItem('session_id') || null,
+      user_agent: navigator.userAgent,
+      ...payload // deve conter: name, email, phone, answers, utm_source, utm_medium, utm_campaign
+    })
+  })
+  
+  return res.json()
+}
+
 export default function MedicalQuiz() {
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [answers, setAnswers] = useState<Record<number, string>>({})
   const [showResults, setShowResults] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [submitError, setSubmitError] = useState('')
+  const router = useRouter()
+
+  // Gerar ou recuperar sessionId
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      let sessionId = localStorage.getItem('session_id')
+      if (!sessionId) {
+        sessionId = crypto.randomUUID()
+        localStorage.setItem('session_id', sessionId)
+      }
+    }
+  }, [])
 
   const handleTextAnswer = (questionId: number, value: string) => {
     setAnswers(prev => ({
@@ -156,11 +197,92 @@ export default function MedicalQuiz() {
     }))
   }
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setSubmitStatus('idle')
+    setSubmitError('')
+
+    try {
+      // 1) Coletar respostas automaticamente do form
+      const form = e.currentTarget
+      const fd = new FormData(form)
+      const answersData: Record<string, any> = {}
+      
+      fd.forEach((value, key) => {
+        if (key in answersData) {
+          // agrega múltiplos valores (checkbox etc.)
+          if (Array.isArray(answersData[key])) {
+            (answersData[key] as any[]).push(value)
+          } else {
+            answersData[key] = [answersData[key], value]
+          }
+        } else {
+          answersData[key] = value
+        }
+      })
+      
+      console.log('📦 answers coletadas:', answersData)
+      
+      if (!Object.keys(answersData).length) {
+        alert('Preencha o quiz antes de enviar.')
+        setIsSubmitting(false)
+        return
+      }
+
+      // 2) Extrair campos obrigatórios
+      const name = answersData['q1'] || ''
+      const email = answersData['q2'] || ''
+      const phone = answersData['q3'] || ''
+
+      if (!name || !email || !phone) {
+        alert('Por favor, preencha nome, e-mail e telefone.')
+        setIsSubmitting(false)
+        return
+      }
+
+      // 3) Preparar payload para Google Sheets
+      const payload = {
+        name,
+        email,
+        phone,
+        answers: answersData,
+        utm_source: new URLSearchParams(window.location.search).get('utm_source') || null,
+        utm_medium: new URLSearchParams(window.location.search).get('utm_medium') || null,
+        utm_campaign: new URLSearchParams(window.location.search).get('utm_campaign') || null
+      }
+
+      console.log('📤 Enviando para Google Sheets:', payload)
+
+      // 4) Enviar para Google Sheets via Apps Script
+      const result = await saveQuizResponse(payload)
+      
+      console.log('📥 Resposta do Google Sheets:', result)
+
+      if (result.ok) {
+        console.log('✅ {ok:true} - Funcionando!')
+        setSubmitStatus('success')
+        
+        // Aguardar um pouco para mostrar o feedback de sucesso
+        setTimeout(() => {
+          ;(window as any).location.href = '/avaliacao/confirmacao'
+        }, 1500)
+      } else {
+        throw new Error(result.error || 'Erro desconhecido do Google Sheets')
+      }
+      
+    } catch (err: any) {
+      console.error('🔴 Erro ao enviar para Google Sheets:', err)
+      setSubmitStatus('error')
+      setSubmitError(err.message || 'Erro inesperado ao enviar. Tente novamente.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   const nextQuestion = () => {
     if (currentQuestion < quizQuestions.length - 1) {
       setCurrentQuestion(currentQuestion + 1)
-    } else {
-      setShowResults(true)
     }
   }
 
@@ -173,6 +295,68 @@ export default function MedicalQuiz() {
   const currentQuestionData = quizQuestions[currentQuestion]
   const currentAnswer = answers[currentQuestionData?.id] || ''
   const canProceed = currentAnswer.trim().length > 0
+
+  // Tela de feedback durante envio
+  if (isSubmitting || submitStatus !== 'idle') {
+    return (
+      <div className="min-h-screen bg-[#F5F7FA] py-8 sm:py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-3xl p-8 sm:p-12 shadow-lg text-center">
+            {isSubmitting && (
+              <>
+                <div className="w-20 h-20 bg-[#00796B] rounded-full flex items-center justify-center mx-auto mb-8">
+                  <Loader2 className="w-10 h-10 text-white animate-spin" />
+                </div>
+                <h1 className="text-3xl sm:text-4xl font-bold text-[#0A2540] mb-6">
+                  Enviando…
+                </h1>
+                <p className="text-lg text-gray-600">
+                  Salvando suas respostas no Google Sheets...
+                </p>
+              </>
+            )}
+
+            {submitStatus === 'success' && (
+              <>
+                <div className="w-20 h-20 bg-[#00796B] rounded-full flex items-center justify-center mx-auto mb-8">
+                  <CheckCircle className="w-10 h-10 text-white" />
+                </div>
+                <h1 className="text-3xl sm:text-4xl font-bold text-[#0A2540] mb-6">
+                  Sucesso!
+                </h1>
+                <p className="text-lg text-gray-600">
+                  Respostas salvas com sucesso! Redirecionando...
+                </p>
+              </>
+            )}
+
+            {submitStatus === 'error' && (
+              <>
+                <div className="w-20 h-20 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-8">
+                  <AlertCircle className="w-10 h-10 text-white" />
+                </div>
+                <h1 className="text-3xl sm:text-4xl font-bold text-red-600 mb-6">
+                  Erro
+                </h1>
+                <p className="text-lg text-gray-600 mb-8">
+                  {submitError}
+                </p>
+                <button 
+                  onClick={() => {
+                    setSubmitStatus('idle')
+                    setCurrentQuestion(quizQuestions.length - 1)
+                  }}
+                  className="bg-[#00796B] text-white px-8 py-4 rounded-2xl hover:bg-[#00695C] transition-all duration-300 text-xl font-medium shadow-lg hover:shadow-xl focus:outline-none focus:ring-3 focus:ring-[#00796B]"
+                >
+                  Tentar Novamente
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   if (showResults) {
     return (
@@ -256,86 +440,124 @@ export default function MedicalQuiz() {
           </div>
         </div>
 
-        {/* Question Card */}
-        <div className="bg-[#F5F7FA] rounded-3xl p-6 sm:p-8 lg:p-12 shadow-lg mb-8 border-2 border-gray-100">
-          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#0A2540] mb-8 leading-tight">
-            {currentQuestionData.question}
-          </h2>
+        {/* Form com onSubmit */}
+        <form onSubmit={handleSubmit}>
+          {/* Question Card */}
+          <div className="bg-[#F5F7FA] rounded-3xl p-6 sm:p-8 lg:p-12 shadow-lg mb-8 border-2 border-gray-100">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#0A2540] mb-8 leading-tight">
+              {currentQuestionData.question}
+            </h2>
 
-          {currentQuestionData.type === 'text' ? (
-            <div className="mb-8">
-              <input
-                type="text"
-                value={currentAnswer}
-                onChange={(e) => handleTextAnswer(currentQuestionData.id, e.target.value)}
-                placeholder={currentQuestionData.placeholder}
-                className="w-full p-4 sm:p-6 text-lg sm:text-xl border-2 border-gray-200 rounded-2xl focus:border-[#00796B] focus:outline-none focus:ring-3 focus:ring-[#00796B]/20 transition-all duration-200 bg-white"
-                style={{ minHeight: '60px' }}
-              />
-            </div>
-          ) : (
-            <div className="space-y-4 mb-8">
-              {currentQuestionData.options?.map((option, index) => {
-                const isSelected = currentAnswer === option
-                
-                return (
-                  <button
-                    key={index}
-                    onClick={() => handleOptionAnswer(currentQuestionData.id, option)}
-                    className={`w-full p-4 sm:p-6 rounded-2xl border-2 text-left transition-all duration-200 focus:outline-none focus:ring-3 focus:ring-[#00796B] text-lg sm:text-xl ${
-                      isSelected
-                        ? 'border-[#00796B] bg-[#00796B]/10 text-[#0A2540] shadow-md'
-                        : 'border-gray-200 hover:border-[#00796B] hover:bg-gray-50 bg-white'
-                    }`}
-                    style={{ minHeight: '60px' }}
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                        isSelected ? 'border-[#00796B] bg-[#00796B]' : 'border-gray-300'
-                      }`}>
-                        {isSelected && (
-                          <div className="w-3 h-3 bg-white rounded-full"></div>
-                        )}
+            {currentQuestionData.type === 'text' ? (
+              <div className="mb-8">
+                <input
+                  type="text"
+                  name={`q${currentQuestionData.id}`}
+                  value={currentAnswer}
+                  onChange={(e) => handleTextAnswer(currentQuestionData.id, e.target.value)}
+                  placeholder={currentQuestionData.placeholder}
+                  className="w-full p-4 sm:p-6 text-lg sm:text-xl border-2 border-gray-200 rounded-2xl focus:border-[#00796B] focus:outline-none focus:ring-3 focus:ring-[#00796B]/20 transition-all duration-200 bg-white"
+                  style={{ minHeight: '60px' }}
+                />
+              </div>
+            ) : (
+              <div className="space-y-4 mb-8">
+                {currentQuestionData.options?.map((option, index) => {
+                  const isSelected = currentAnswer === option
+                  
+                  return (
+                    <label
+                      key={index}
+                      className={`w-full p-4 sm:p-6 rounded-2xl border-2 text-left transition-all duration-200 focus:outline-none focus:ring-3 focus:ring-[#00796B] text-lg sm:text-xl cursor-pointer block ${
+                        isSelected
+                          ? 'border-[#00796B] bg-[#00796B]/10 text-[#0A2540] shadow-md'
+                          : 'border-gray-200 hover:border-[#00796B] hover:bg-gray-50 bg-white'
+                      }`}
+                      style={{ minHeight: '60px' }}
+                    >
+                      <div className="flex items-center gap-4">
+                        <input
+                          type="radio"
+                          name={`q${currentQuestionData.id}`}
+                          value={option}
+                          checked={isSelected}
+                          onChange={() => handleOptionAnswer(currentQuestionData.id, option)}
+                          className="sr-only"
+                        />
+                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                          isSelected ? 'border-[#00796B] bg-[#00796B]' : 'border-gray-300'
+                        }`}>
+                          {isSelected && (
+                            <div className="w-3 h-3 bg-white rounded-full"></div>
+                          )}
+                        </div>
+                        <span className="font-medium leading-relaxed">{option}</span>
                       </div>
-                      <span className="font-medium leading-relaxed">{option}</span>
-                    </div>
-                  </button>
-                )
-              })}
-            </div>
-          )}
-        </div>
+                    </label>
+                  )
+                })}
+              </div>
+            )}
+          </div>
 
-        {/* Navigation */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-          <button
-            onClick={prevQuestion}
-            disabled={currentQuestion === 0}
-            className={`flex items-center gap-2 px-6 py-4 rounded-2xl font-medium transition-all duration-200 focus:outline-none focus:ring-3 focus:ring-[#00796B] text-lg order-2 sm:order-1 ${
-              currentQuestion === 0
-                ? 'text-gray-400 cursor-not-allowed'
-                : 'text-[#0A2540] hover:bg-gray-100 bg-white border-2 border-gray-200'
-            }`}
-            style={{ minHeight: '56px' }}
-          >
-            <ChevronLeft size={20} />
-            Anterior
-          </button>
+          {/* Navigation */}
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+            <button
+              type="button"
+              onClick={prevQuestion}
+              disabled={currentQuestion === 0}
+              className={`flex items-center gap-2 px-6 py-4 rounded-2xl font-medium transition-all duration-200 focus:outline-none focus:ring-3 focus:ring-[#00796B] text-lg order-2 sm:order-1 ${
+                currentQuestion === 0
+                  ? 'text-gray-400 cursor-not-allowed'
+                  : 'text-[#0A2540] hover:bg-gray-100 bg-white border-2 border-gray-200'
+              }`}
+              style={{ minHeight: '56px' }}
+            >
+              <ChevronLeft size={20} />
+              Anterior
+            </button>
 
-          <button
-            onClick={nextQuestion}
-            disabled={!canProceed}
-            className={`flex items-center gap-2 px-8 py-4 rounded-2xl font-medium transition-all duration-200 focus:outline-none focus:ring-3 focus:ring-[#00796B] text-lg sm:text-xl order-1 sm:order-2 w-full sm:w-auto ${
-              canProceed
-                ? 'bg-[#00796B] text-white hover:bg-[#00695C] shadow-lg hover:shadow-xl'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            }`}
-            style={{ minHeight: '56px' }}
-          >
-            {currentQuestion === quizQuestions.length - 1 ? 'Finalizar Avaliação' : 'Próxima Pergunta'}
-            <ChevronRight size={20} />
-          </button>
-        </div>
+            {currentQuestion === quizQuestions.length - 1 ? (
+              <button
+                type="submit"
+                disabled={!canProceed || isSubmitting}
+                className={`flex items-center gap-2 px-8 py-4 rounded-2xl font-medium transition-all duration-200 focus:outline-none focus:ring-3 focus:ring-[#00796B] text-lg sm:text-xl order-1 sm:order-2 w-full sm:w-auto ${
+                  canProceed && !isSubmitting
+                    ? 'bg-[#00796B] text-white hover:bg-[#00695C] shadow-lg hover:shadow-xl'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
+                style={{ minHeight: '56px' }}
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Enviando...
+                  </>
+                ) : (
+                  <>
+                    Enviar
+                    <ChevronRight size={20} />
+                  </>
+                )}
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={nextQuestion}
+                disabled={!canProceed}
+                className={`flex items-center gap-2 px-8 py-4 rounded-2xl font-medium transition-all duration-200 focus:outline-none focus:ring-3 focus:ring-[#00796B] text-lg sm:text-xl order-1 sm:order-2 w-full sm:w-auto ${
+                  canProceed
+                    ? 'bg-[#00796B] text-white hover:bg-[#00695C] shadow-lg hover:shadow-xl'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
+                style={{ minHeight: '56px' }}
+              >
+                Próxima Pergunta
+                <ChevronRight size={20} />
+              </button>
+            )}
+          </div>
+        </form>
 
         {/* Security Notice */}
         <div className="mt-8 text-center">
