@@ -1,98 +1,117 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
 
-// Tipos para validação
-type Payload = {
-  userId?: string | null
-  sessionId?: string | null
-  answers: Record<string, any>
-  score?: number | null
-}
-
-// Configuração do Supabase com Service Role (apenas server-side)
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-
-if (!supabaseUrl) {
-  console.error('❌ NEXT_PUBLIC_SUPABASE_URL não encontrada nas variáveis de ambiente')
-}
-
-if (!supabaseServiceKey) {
-  console.error('❌ SUPABASE_SERVICE_ROLE_KEY não encontrada nas variáveis de ambiente')
-}
-
-const supabase = supabaseUrl && supabaseServiceKey 
-  ? createClient(supabaseUrl, supabaseServiceKey)
-  : null
+// Configurações do Google Apps Script
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwW_4A_-utrY5pCj6lCTv8_jSOQY-Ks_DaYP67RgmqyY_R09yFpGxCHQ6yeg5u3C5TQnw/exec'
+const SECURITY_TOKEN = 'potente0709'
 
 export async function POST(request: NextRequest) {
   try {
-    // Validar se o Supabase está configurado
-    if (!supabase) {
-      console.error('❌ Supabase não configurado - verifique as variáveis de ambiente')
+    // 1. Validar Content-Type
+    const contentType = request.headers.get('content-type')
+    if (!contentType?.includes('application/json')) {
       return NextResponse.json(
-        { ok: false, error: 'Configuração do servidor incompleta' },
-        { status: 500 }
-      )
-    }
-
-    // Parse do body
-    let body: Payload
-    try {
-      body = await request.json()
-    } catch (error) {
-      console.error('❌ Erro ao fazer parse do JSON:', error)
-      return NextResponse.json(
-        { ok: false, error: 'JSON inválido' },
+        { ok: false, error: 'Content-Type deve ser application/json' },
         { status: 400 }
       )
     }
 
-    // Validação do payload
-    if (!body.answers || typeof body.answers !== 'object' || Object.keys(body.answers).length === 0) {
-      console.error('❌ Answers vazio ou inválido:', body.answers)
+    // 2. Extrair dados do body
+    const body = await request.json()
+    console.log('📥 Dados recebidos na API:', body)
+
+    // 3. Validar campos obrigatórios
+    const { name, email, phone, answers } = body
+    
+    if (!name || !email || !phone) {
       return NextResponse.json(
-        { ok: false, error: 'answers required' },
+        { ok: false, error: 'Campos obrigatórios: name, email, phone' },
         { status: 400 }
       )
     }
 
-    console.log('✅ Dados recebidos:', {
-      userId: body.userId,
-      sessionId: body.sessionId,
-      answersCount: Object.keys(body.answers).length,
-      score: body.score
+    if (!answers || typeof answers !== 'object') {
+      return NextResponse.json(
+        { ok: false, error: 'Campo answers é obrigatório e deve ser um objeto' },
+        { status: 400 }
+      )
+    }
+
+    // 4. Preparar payload para o Google Apps Script
+    const payload = {
+      token: SECURITY_TOKEN,
+      sessionId: body.sessionId || null,
+      user_agent: body.user_agent || 'Unknown',
+      name,
+      email,
+      phone,
+      answers,
+      utm_source: body.utm_source || null,
+      utm_medium: body.utm_medium || null,
+      utm_campaign: body.utm_campaign || null,
+      timestamp: new Date().toISOString()
+    }
+
+    console.log('📤 Enviando para Google Apps Script:', {
+      url: GOOGLE_APPS_SCRIPT_URL,
+      payload: { ...payload, token: '[HIDDEN]' }
     })
 
-    // Inserir na tabela public.respostas_do_quiz
-    const { data, error } = await supabase
-      .from('respostas_do_quiz')
-      .insert({
-        user_id: body.userId,
-        session_id: body.sessionId,
-        answers: body.answers,
-        score: body.score
-      })
-      .select('id')
-      .single()
+    // 5. Fazer requisição para o Google Apps Script
+    const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload)
+    })
 
-    if (error) {
-      console.error('❌ Erro do Supabase ao inserir:', error)
+    // 6. Verificar se a resposta é válida
+    if (!response.ok) {
+      console.error('❌ Erro HTTP do Google Apps Script:', response.status, response.statusText)
       return NextResponse.json(
-        { ok: false, error: `Erro no banco de dados: ${error.message}` },
+        { ok: false, error: `Erro HTTP ${response.status}: ${response.statusText}` },
+        { status: 502 }
+      )
+    }
+
+    // 7. Processar resposta do Google Apps Script
+    const result = await response.json()
+    console.log('📥 Resposta do Google Apps Script:', result)
+
+    // 8. Validar resposta do Apps Script
+    if (result.ok) {
+      console.log('✅ Sucesso! Dados salvos na planilha')
+      return NextResponse.json({
+        ok: true,
+        message: 'Dados salvos com sucesso na planilha',
+        data: result
+      })
+    } else {
+      console.error('❌ Erro retornado pelo Apps Script:', result.error)
+      return NextResponse.json(
+        { ok: false, error: result.error || 'Erro desconhecido do Google Apps Script' },
         { status: 500 }
       )
     }
 
-    console.log('✅ Quiz salvo com sucesso! ID:', data?.id)
+  } catch (error: any) {
+    console.error('🔴 Erro interno da API:', error)
+    
+    // Tratar diferentes tipos de erro
+    if (error.name === 'SyntaxError') {
+      return NextResponse.json(
+        { ok: false, error: 'JSON inválido no body da requisição' },
+        { status: 400 }
+      )
+    }
 
-    return NextResponse.json(
-      { ok: true, id: data?.id },
-      { status: 200 }
-    )
+    if (error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED') {
+      return NextResponse.json(
+        { ok: false, error: 'Erro de conexão com Google Apps Script' },
+        { status: 502 }
+      )
+    }
 
-  } catch (error) {
-    console.error('❌ Erro interno do servidor:', error)
     return NextResponse.json(
       { ok: false, error: 'Erro interno do servidor' },
       { status: 500 }
@@ -100,73 +119,13 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Rejeitar outros métodos HTTP
+// Método GET para teste da API
 export async function GET() {
-  return NextResponse.json(
-    { ok: false, error: 'Método não permitido' },
-    { status: 405 }
-  )
-}
-
-export async function PUT() {
-  return NextResponse.json(
-    { ok: false, error: 'Método não permitido' },
-    { status: 405 }
-  )
-}
-
-export async function DELETE() {
-  return NextResponse.json(
-    { ok: false, error: 'Método não permitido' },
-    { status: 405 }
-  )
-}
-
-// Teste automático em desenvolvimento
-if (process.env.NODE_ENV === 'development') {
-  console.log('🧪 Modo desenvolvimento - teste automático disponível')
-  
-  // Função de teste que pode ser chamada manualmente
-  const testQuizAPI = async () => {
-    try {
-      const testPayload = {
-        userId: null,
-        sessionId: 'test-session-' + Date.now(),
-        answers: { test: true, question1: 'Resposta de teste' },
-        score: 50
-      }
-
-      console.log('🧪 Executando teste automático da API /api/quiz...')
-      console.log('📤 Payload de teste:', testPayload)
-
-      // Simular chamada interna (não HTTP real)
-      if (supabase) {
-        const { data, error } = await supabase
-          .from('respostas_do_quiz')
-          .insert({
-            user_id: testPayload.userId,
-            session_id: testPayload.sessionId,
-            answers: testPayload.answers,
-            score: testPayload.score
-          })
-          .select('id')
-          .single()
-
-        if (error) {
-          console.log('❌ Teste falhou:', error.message)
-        } else {
-          console.log('✅ Teste passou! ID criado:', data?.id)
-        }
-      }
-    } catch (error) {
-      console.log('❌ Erro no teste:', error)
-    }
-  }
-
-  // Executar teste após 5 segundos (apenas uma vez)
-  setTimeout(() => {
-    if (process.env.NODE_ENV === 'development') {
-      testQuizAPI()
-    }
-  }, 5000)
+  return NextResponse.json({
+    ok: true,
+    message: 'API Quiz funcionando',
+    endpoint: '/api/quiz',
+    methods: ['POST'],
+    timestamp: new Date().toISOString()
+  })
 }

@@ -2,15 +2,17 @@
 
 import { useState, useEffect } from 'react'
 import { ChevronRight, Shield, Clock, Users, Star, Menu, X, Phone, Mail, BookOpen } from 'lucide-react'
-import MedicalQuiz from '@/components/MedicalQuiz'
 import PatientDashboard from '@/components/PatientDashboard'
 import LoginPage from '@/components/LoginPage'
 import { authService, type AuthState } from '@/lib/auth'
 
 export default function DrPotenciaHome() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [currentView, setCurrentView] = useState('home') // 'home', 'quiz', 'dashboard', 'login'
+  const [currentView, setCurrentView] = useState('home') // 'home', 'dashboard', 'login'
   const [authState, setAuthState] = useState<AuthState>(authService.getAuthState())
+
+  // Link do WhatsApp para todos os CTAs
+  const whatsappLink = "https://wa.me/5511983095381?text=Ol%C3%A1!%20Quero%20iniciar%20minha%20consulta%20gratuita."
 
   useEffect(() => {
     const unsubscribe = authService.subscribe(setAuthState)
@@ -38,12 +40,13 @@ export default function DrPotenciaHome() {
     setCurrentView('home')
   }
 
-  if (currentView === 'login') {
-    return <LoginPage onLoginSuccess={handleLoginSuccess} onBackToHome={handleBackToHome} />
+  // Função para abrir WhatsApp
+  const openWhatsApp = () => {
+    window.open(whatsappLink, '_blank')
   }
 
-  if (currentView === 'quiz') {
-    return <MedicalQuiz />
+  if (currentView === 'login') {
+    return <LoginPage onLoginSuccess={handleLoginSuccess} onBackToHome={handleBackToHome} />
   }
 
   if (currentView === 'dashboard') {
@@ -81,7 +84,7 @@ export default function DrPotenciaHome() {
                 Área do Cliente
               </button>
               <button 
-                onClick={() => setCurrentView('quiz')}
+                onClick={openWhatsApp}
                 className="bg-[#00796B] text-white px-6 py-3 rounded-2xl hover:bg-[#00695C] transition-colors text-lg font-medium focus:outline-none focus:ring-3 focus:ring-[#00796B]"
               >
                 Começar Consulta
@@ -117,7 +120,7 @@ export default function DrPotenciaHome() {
                   Área do Cliente
                 </button>
                 <button 
-                  onClick={() => setCurrentView('quiz')}
+                  onClick={openWhatsApp}
                   className="bg-[#00796B] text-white px-6 py-3 rounded-2xl hover:bg-[#00695C] transition-colors text-lg font-medium w-full focus:outline-none focus:ring-3 focus:ring-[#00796B]"
                 >
                   Começar Consulta
@@ -142,7 +145,7 @@ export default function DrPotenciaHome() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <button 
-                  onClick={() => setCurrentView('quiz')}
+                  onClick={openWhatsApp}
                   className="bg-[#00796B] text-white px-8 py-4 rounded-2xl hover:bg-[#00695C] transition-all duration-300 text-xl font-medium shadow-lg hover:shadow-xl focus:outline-none focus:ring-3 focus:ring-[#00796B]"
                 >
                   Iniciar Minha Avaliação Gratuita
@@ -225,7 +228,7 @@ export default function DrPotenciaHome() {
                 </li>
               </ul>
               <button 
-                onClick={() => setCurrentView('quiz')}
+                onClick={openWhatsApp}
                 className="w-full bg-[#00796B] text-white py-4 rounded-2xl hover:bg-[#00695C] transition-colors text-lg font-medium focus:outline-none focus:ring-3 focus:ring-[#00796B] mt-auto"
               >
                 Descobrir o Melhor Tratamento pra Mim
@@ -253,7 +256,7 @@ export default function DrPotenciaHome() {
                 </li>
               </ul>
               <button 
-                onClick={() => setCurrentView('quiz')}
+                onClick={openWhatsApp}
                 className="w-full bg-[#00796B] text-white py-4 rounded-2xl hover:bg-[#00695C] transition-colors text-lg font-medium focus:outline-none focus:ring-3 focus:ring-[#00796B] mt-auto"
               >
                 Descobrir o Melhor Tratamento pra Mim
@@ -281,7 +284,7 @@ export default function DrPotenciaHome() {
                 </li>
               </ul>
               <button 
-                onClick={() => setCurrentView('quiz')}
+                onClick={openWhatsApp}
                 className="w-full bg-[#00796B] text-white py-4 rounded-2xl hover:bg-[#00695C] transition-colors text-lg font-medium focus:outline-none focus:ring-3 focus:ring-[#00796B] mt-auto"
               >
                 Descobrir o Melhor Tratamento pra Mim
@@ -326,7 +329,7 @@ export default function DrPotenciaHome() {
               </div>
               <h3 className="text-2xl font-bold text-[#0A2540] mb-4 text-center">1. Consulta Online</h3>
               <p className="text-lg text-gray-600 leading-relaxed text-center">
-                Responda um breve questionário médico em menos de 2 minutos, com total sigilo e sem precisar aparecer. Simples, rápido e fácil.
+                Entre em contato conosco pelo WhatsApp para iniciar sua consulta gratuita. Simples, rápido e totalmente confidencial.
               </p>
             </div>
 
@@ -336,7 +339,7 @@ export default function DrPotenciaHome() {
               </div>
               <h3 className="text-2xl font-bold text-[#0A2540] mb-4 text-center">2. Avaliação Médica</h3>
               <p className="text-lg text-gray-600 leading-relaxed text-center">
-                Nossa equipe médica analisa suas respostas e indica o tratamento mais eficaz para o seu caso, com base em protocolos clínicos comprovados e de forma totalmente personalizada.
+                Nossa equipe médica analisa seu caso e indica o tratamento mais eficaz, com base em protocolos clínicos comprovados e de forma totalmente personalizada.
               </p>
             </div>
 
@@ -353,7 +356,7 @@ export default function DrPotenciaHome() {
 
           <div className="text-center mt-12">
             <button 
-              onClick={() => setCurrentView('quiz')}
+              onClick={openWhatsApp}
               className="bg-[#00796B] text-white px-8 py-4 rounded-2xl hover:bg-[#00695C] transition-all duration-300 text-xl font-medium shadow-lg hover:shadow-xl focus:outline-none focus:ring-3 focus:ring-[#00796B]"
             >
               Iniciar Avaliação Confidencial
@@ -437,7 +440,7 @@ export default function DrPotenciaHome() {
           </p>
           <div className="flex justify-center">
             <button 
-              onClick={() => setCurrentView('quiz')}
+              onClick={openWhatsApp}
               className="bg-[#00796B] text-white px-8 py-4 rounded-2xl hover:bg-[#00695C] transition-all duration-300 text-xl font-medium shadow-lg hover:shadow-xl focus:outline-none focus:ring-3 focus:ring-[#00796B]"
             >
               Iniciar Consulta Gratuita
